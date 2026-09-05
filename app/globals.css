@@ -18,6 +18,9 @@
   --brand-success: #5a8f6b;
   --brand-warning: #d4a373;
   --brand-primary-foreground: #ffffff;
+  --brand-ink: #3a4a3e;
+  --brand-ink-foreground: #f7f3ee;
+  --brand-hero-shadow: 0 28px 65px rgb(107 143 113 / 0.22);
   --brand-shadow: 0 1px 3px rgb(44 42 38 / 0.06), 0 8px 24px rgb(44 42 38 / 0.04);
   --brand-radius: 1rem;
   --background: var(--brand-background);
@@ -49,8 +52,10 @@
   --color-success: var(--brand-success);
   --font-sans: var(--font-body);
   --font-display: var(--font-display);
+  --color-ink: var(--brand-ink);
+  --color-ink-foreground: var(--brand-ink-foreground);
+  --shadow-hero: var(--brand-hero-shadow);
   --shadow-soft: var(--brand-shadow);
-  --radius-brand: var(--brand-radius);
 }
 
 html {
@@ -163,8 +168,38 @@ body {
   animation: blob-drift 12s ease-in-out infinite;
 }
 
-.anim-chip {
-  animation: chip-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+@keyframes float-card {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-7px);
+  }
+}
+
+.anim-float {
+  animation: float-card 5.5s ease-in-out infinite;
+}
+
+.anim-float-delayed {
+  animation: float-card 6.2s ease-in-out 0.8s infinite;
+}
+
+.hero-visual {
+  box-shadow: var(--brand-hero-shadow);
+}
+
+.eyebrow-kicker {
+  color: var(--brand-accent);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.headline-accent {
+  color: var(--brand-accent);
+  font-style: italic;
+  font-weight: 500;
 }
 
 .lift-card {
@@ -226,7 +261,9 @@ body {
 
   .lift-card:hover,
   .btn-ease:hover,
-  .btn-ease:active {
+  .btn-ease:active,
+  .anim-float,
+  .anim-float-delayed {
     transform: none;
   }
 }

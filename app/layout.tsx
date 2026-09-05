@@ -8,6 +8,7 @@ const display = Fraunces({
   subsets: ["latin"],
   variable: "--font-display",
   display: "swap",
+  style: ["normal", "italic"],
 });
 
 const body = Plus_Jakarta_Sans({

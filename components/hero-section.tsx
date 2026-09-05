@@ -1,81 +1,64 @@
 import Image from "next/image";
-import { Bird, Cat, Dog, PawPrint } from "lucide-react";
+import { HeartPulse, Salad, ShieldCheck, Sparkles } from "lucide-react";
 import { WaitlistForm } from "@/components/waitlist-form";
 import { COPY, HERO_BLUR_DATA_URL } from "@/lib/site-config";
 
-const companions = [
-  { label: "Dogs", icon: Dog },
-  { label: "Cats", icon: Cat },
-  { label: "Birds", icon: Bird },
-];
-
 export function HeroSection() {
   return (
-    <section className="mx-auto max-w-6xl px-4 pb-16 pt-4 md:px-8 md:pb-24 md:pt-8">
-      <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:items-center">
-        <div className="space-y-6">
-          <p className="anim-fade-up inline-flex items-center gap-2 rounded-full bg-secondary px-4 py-1.5 text-xs font-medium tracking-[0.12em] text-secondary-foreground">
-            <PawPrint className="anim-paw size-4 text-primary" aria-hidden="true" />
-            {COPY.eyebrow}
+    <section
+      id="top"
+      className="mx-auto grid max-w-[1240px] items-center gap-10 px-5 pb-16 pt-6 md:px-8 md:pb-20 md:pt-8 lg:grid-cols-[1.03fr_0.97fr] lg:gap-16 lg:pb-24"
+    >
+      <div className="hero-copy">
+        <p className="eyebrow-kicker anim-fade-up inline-flex items-center gap-2 text-[0.76rem] font-extrabold">
+          <Sparkles className="anim-paw size-[15px]" aria-hidden="true" />
+          {COPY.eyebrow}
+        </p>
+        <div className="anim-fade-up anim-delay-1">
+          <h1 className="font-display mt-5 max-w-[660px] text-[clamp(2.65rem,5.4vw,5.1rem)] font-medium leading-[0.98] tracking-[-0.05em] text-foreground">
+            {COPY.headlineLead}
+            <br />
+            <span className="headline-accent">{COPY.headlineAccent}</span>
+          </h1>
+          <p className="mt-6 max-w-[590px] text-[1.05rem] leading-relaxed text-muted-foreground md:text-[1.15rem] md:leading-[1.65]">
+            {COPY.supporting}
           </p>
-          <div className="anim-fade-up anim-delay-1 space-y-4">
-            <h1 className="font-display text-4xl font-semibold leading-tight tracking-tight text-foreground md:text-5xl lg:text-[3.4rem]">
-              {COPY.headlineLead}
-              <br />
-              {COPY.headlineAccent}
-            </h1>
-            <p className="max-w-xl text-lg leading-relaxed text-muted-foreground">
-              {COPY.supporting}
-            </p>
-          </div>
-          <div className="anim-fade-up anim-delay-2">
-            <WaitlistForm />
-          </div>
         </div>
+        <div className="anim-fade-up anim-delay-2 mt-8" id="join">
+          <WaitlistForm />
+        </div>
+        <p className="anim-fade-up anim-delay-3 mt-3 flex items-center gap-1.5 text-[0.76rem] text-muted-foreground">
+          <ShieldCheck className="size-3.5 shrink-0" aria-hidden="true" />
+          {COPY.privacyReassurance}
+        </p>
+      </div>
 
-        <div className="anim-scale-in anim-delay-2 relative mx-auto w-full max-w-xl lg:max-w-none">
-          <div
-            className="anim-blob absolute -left-6 -top-6 size-24 rounded-full bg-primary/10 blur-2xl"
-            aria-hidden="true"
+      <div className="anim-scale-in anim-delay-2 relative mx-auto w-full max-w-xl lg:max-w-none">
+        <div className="hero-visual relative min-h-[420px] overflow-hidden rounded-[2.5rem] sm:min-h-[520px] sm:rounded-[170px_170px_24px_24px] lg:min-h-[610px]">
+          <Image
+            src="/images/animivo-waitlist-hero.webp"
+            alt="A golden retriever, a tabby cat, and a green budgerigar together in a sunlit living room"
+            fill
+            priority
+            sizes="(max-width: 1024px) 100vw, 48vw"
+            placeholder="blur"
+            blurDataURL={HERO_BLUR_DATA_URL}
+            className="object-cover object-[60%_center]"
           />
-          <div
-            className="anim-blob absolute -bottom-8 -right-4 size-32 rounded-full bg-accent/15 blur-2xl"
-            aria-hidden="true"
-            style={{ animationDelay: "2s" }}
-          />
-          <figure className="relative overflow-hidden rounded-[2rem] border border-border bg-card shadow-soft">
-            <Image
-              src="/images/animivo-waitlist-hero.webp"
-              alt="A golden retriever, a tabby cat, and a green budgerigar together in a sunlit living room"
-              width={1536}
-              height={1024}
-              priority
-              sizes="(max-width: 1024px) 100vw, 50vw"
-              placeholder="blur"
-              blurDataURL={HERO_BLUR_DATA_URL}
-              className="h-auto w-full object-cover"
-            />
-            <figcaption className="pointer-events-none absolute inset-x-0 bottom-0 flex flex-wrap items-end justify-between gap-2 bg-gradient-to-t from-[rgb(44_42_38_/_0.38)] via-[rgb(44_42_38_/_0.08)] to-transparent p-4 md:p-5">
-              <ul className="flex flex-wrap gap-2">
-                {companions.map((companion, index) => (
-                  <li
-                    key={companion.label}
-                    className="anim-chip inline-flex items-center gap-1.5 rounded-full bg-card/95 px-3 py-1.5 text-xs font-medium text-foreground shadow-soft backdrop-blur-sm"
-                    style={{ animationDelay: `${400 + index * 90}ms` }}
-                  >
-                    <companion.icon className="size-3.5 text-primary" aria-hidden="true" />
-                    {companion.label}
-                  </li>
-                ))}
-              </ul>
-              <p
-                className="anim-chip hidden rounded-full bg-card/95 px-3 py-1.5 text-xs font-medium text-foreground shadow-soft backdrop-blur-sm sm:block"
-                style={{ animationDelay: "680ms" }}
-              >
-                One household. Every companion.
-              </p>
-            </figcaption>
-          </figure>
+          <div className="anim-float anim-chip absolute left-3 top-6 z-[2] flex max-w-[220px] items-center gap-3 rounded-2xl border border-white/70 bg-white/90 px-3.5 py-3 shadow-[0_12px_32px_rgb(44_42_38_/_0.14)] backdrop-blur-md sm:left-5 sm:top-16">
+            <HeartPulse className="size-[18px] shrink-0 text-accent" aria-hidden="true" />
+            <span className="text-[0.8rem] leading-snug text-foreground">
+              <strong className="block font-semibold">Health routines</strong>
+              Never miss what matters
+            </span>
+          </div>
+          <div className="anim-float-delayed anim-chip absolute bottom-5 right-3 z-[2] flex max-w-[220px] items-center gap-3 rounded-2xl border border-white/70 bg-white/90 px-3.5 py-3 shadow-[0_12px_32px_rgb(44_42_38_/_0.14)] backdrop-blur-md sm:bottom-11 sm:right-5">
+            <Salad className="size-[18px] shrink-0 text-primary" aria-hidden="true" />
+            <span className="text-[0.8rem] leading-snug text-foreground">
+              <strong className="block font-semibold">Smarter feeding</strong>
+              Guidance for their needs
+            </span>
+          </div>
         </div>
       </div>
     </section>
