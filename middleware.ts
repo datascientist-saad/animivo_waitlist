@@ -2,10 +2,8 @@ import { NextResponse, type NextRequest } from "next/server";
 
 function buildCsp(nonce: string) {
   const isDev = process.env.NODE_ENV === "development";
-  const analytics =
-    process.env.NEXT_PUBLIC_ENABLE_ANALYTICS === "true"
-      ? " https://va.vercel-scripts.com https://vitals.vercel-insights.com"
-      : "";
+  const analyticsHosts =
+    " https://va.vercel-scripts.com https://vitals.vercel-insights.com";
 
   // Do not use strict-dynamic: it ignores host allowlists and blocks Turnstile.
   // Next.js applies this nonce to its own scripts on dynamically rendered pages.
@@ -13,6 +11,7 @@ function buildCsp(nonce: string) {
     "'self'",
     `'nonce-${nonce}'`,
     "https://challenges.cloudflare.com",
+    "https://va.vercel-scripts.com",
     ...(isDev ? ["'unsafe-eval'"] : []),
   ].join(" ");
 
@@ -22,7 +21,7 @@ function buildCsp(nonce: string) {
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data: blob:",
     "font-src 'self'",
-    `connect-src 'self' https://challenges.cloudflare.com${analytics}`,
+    `connect-src 'self' https://challenges.cloudflare.com${analyticsHosts}`,
     "frame-src https://challenges.cloudflare.com",
     "child-src https://challenges.cloudflare.com",
     "worker-src 'self' blob:",
