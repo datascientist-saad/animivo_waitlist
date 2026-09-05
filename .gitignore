@@ -47,6 +47,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# supabase CLI local cache
-supabase/.temp
-supabase/.branches
+# generated lockup used only while building OG/favicon assets
+/brand/animivo-logo-full.png
