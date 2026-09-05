@@ -93,5 +93,11 @@ export function normalizeEmail(email: string) {
 export const GENERIC_ERROR =
   "We couldn’t save your signup just now. Please try again in a moment.";
 
+export const SETUP_ERROR =
+  "This waitlist isn’t fully configured yet. Please try again shortly, or email hello@animivo.app.";
+
+export const VERIFY_ERROR =
+  "Please complete the verification check again, then resubmit.";
+
 export const RATE_LIMIT_ERROR =
   "Please wait a few minutes before trying again.";

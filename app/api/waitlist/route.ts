@@ -7,6 +7,8 @@ import { joinWaitlist } from "@/lib/supabase/admin.server";
 import {
   GENERIC_ERROR,
   RATE_LIMIT_ERROR,
+  SETUP_ERROR,
+  VERIFY_ERROR,
   normalizeEmail,
   waitlistRequestSchema,
 } from "@/lib/validation/waitlist";
@@ -23,52 +25,54 @@ function json(status: number, body: Record<string, unknown>) {
   return NextResponse.json(body, { status, headers: JSON_HEADERS });
 }
 
-function genericError(status = 400) {
-  return json(status, { ok: false, error: GENERIC_ERROR });
+function logCategory(category: string) {
+  console.error(`[waitlist] ${category}`);
 }
 
 export async function POST(request: Request) {
   try {
     getServerEnv();
   } catch {
-    return genericError(500);
+    logCategory("env_unconfigured");
+    return json(503, { ok: false, error: SETUP_ERROR });
   }
 
   if (!isAllowedRequestOrigin(request.headers)) {
-    return genericError(403);
+    logCategory("origin_rejected");
+    return json(403, { ok: false, error: GENERIC_ERROR });
   }
 
   const contentType = request.headers.get("content-type") ?? "";
   if (!contentType.toLowerCase().includes("application/json")) {
-    return genericError(415);
+    return json(415, { ok: false, error: GENERIC_ERROR });
   }
 
   const contentLength = request.headers.get("content-length");
   if (contentLength && Number(contentLength) > MAX_BODY_BYTES) {
-    return genericError(413);
+    return json(413, { ok: false, error: GENERIC_ERROR });
   }
 
   let raw: string;
   try {
     raw = await request.text();
   } catch {
-    return genericError(400);
+    return json(400, { ok: false, error: GENERIC_ERROR });
   }
 
   if (raw.length > MAX_BODY_BYTES) {
-    return genericError(413);
+    return json(413, { ok: false, error: GENERIC_ERROR });
   }
 
   let parsedJson: unknown;
   try {
     parsedJson = JSON.parse(raw) as unknown;
   } catch {
-    return genericError(400);
+    return json(400, { ok: false, error: GENERIC_ERROR });
   }
 
   const parsed = waitlistRequestSchema.safeParse(parsedJson);
   if (!parsed.success) {
-    return genericError(400);
+    return json(400, { ok: false, error: GENERIC_ERROR });
   }
 
   const payload = parsed.data;
@@ -84,16 +88,18 @@ export async function POST(request: Request) {
       return json(429, { ok: false, error: RATE_LIMIT_ERROR });
     }
   } catch {
-    return genericError(500);
+    logCategory("rate_limit_backend");
+    return json(503, { ok: false, error: SETUP_ERROR });
   }
 
   if (payload.website && payload.website.trim().length > 0) {
     return json(200, { ok: true, outcome: "joined" });
   }
 
-  const turnstile = await verifyTurnstileToken(payload.turnstileToken, ip);
+  const turnstile = await verifyTurnstileToken(payload.turnstileToken);
   if (!turnstile.ok) {
-    return genericError(400);
+    logCategory(`turnstile_${turnstile.reason}`);
+    return json(400, { ok: false, error: VERIFY_ERROR });
   }
 
   try {
@@ -118,7 +124,8 @@ export async function POST(request: Request) {
       outcome: result.outcome,
     });
   } catch {
-    return genericError(500);
+    logCategory("persist_failed");
+    return json(500, { ok: false, error: GENERIC_ERROR });
   }
 }
 

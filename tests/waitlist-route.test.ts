@@ -33,7 +33,12 @@ vi.mock("@/lib/supabase/admin.server", () => ({
 }));
 
 import { POST } from "@/app/api/waitlist/route";
-import { GENERIC_ERROR, RATE_LIMIT_ERROR } from "@/lib/validation/waitlist";
+import {
+  GENERIC_ERROR,
+  RATE_LIMIT_ERROR,
+  SETUP_ERROR,
+  VERIFY_ERROR,
+} from "@/lib/validation/waitlist";
 
 function validBody(overrides: Record<string, unknown> = {}) {
   return {
@@ -126,10 +131,10 @@ describe("POST /api/waitlist", () => {
   });
 
   it("rejects an invalid Turnstile token", async () => {
-    mocks.verifyTurnstileToken.mockResolvedValue({ ok: false });
+    mocks.verifyTurnstileToken.mockResolvedValue({ ok: false, reason: "rejected" });
     const response = await postJson(validBody());
     expect(response.status).toBe(400);
-    expect(await response.json()).toEqual({ ok: false, error: GENERIC_ERROR });
+    expect(await response.json()).toEqual({ ok: false, error: VERIFY_ERROR });
     expect(mocks.joinWaitlist).not.toHaveBeenCalled();
   });
 
@@ -166,6 +171,24 @@ describe("POST /api/waitlist", () => {
     const body = await response.json();
     expect(body).toEqual({ ok: false, error: GENERIC_ERROR });
     expect(JSON.stringify(body)).not.toContain("permission denied");
+  });
+
+  it("returns a setup error when required env is missing", async () => {
+    mocks.getServerEnv.mockImplementation(() => {
+      throw new Error("Server configuration error");
+    });
+    const response = await postJson(validBody());
+    expect(response.status).toBe(503);
+    expect(await response.json()).toEqual({ ok: false, error: SETUP_ERROR });
+    expect(mocks.joinWaitlist).not.toHaveBeenCalled();
+  });
+
+  it("returns a setup error when the rate-limit backend fails", async () => {
+    mocks.enforceWaitlistRateLimits.mockRejectedValue(new Error("RATE_LIMIT_BACKEND_FAILED"));
+    const response = await postJson(validBody());
+    expect(response.status).toBe(503);
+    expect(await response.json()).toEqual({ ok: false, error: SETUP_ERROR });
+    expect(mocks.joinWaitlist).not.toHaveBeenCalled();
   });
 
   it("stores XSS-like strings without reflecting them in the response", async () => {

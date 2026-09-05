@@ -7,7 +7,11 @@ type TurnstileApiResponse = {
   "error-codes"?: string[];
 };
 
-export async function verifyTurnstileToken(token: string, remoteIp?: string | null) {
+export type TurnstileResult =
+  | { ok: true }
+  | { ok: false; reason: "missing" | "rejected" | "unavailable" };
+
+export async function verifyTurnstileToken(token: string): Promise<TurnstileResult> {
   const env = getServerEnv();
   const bypassAllowed =
     env.ALLOW_DEV_TURNSTILE_BYPASS === "true" &&
@@ -15,21 +19,17 @@ export async function verifyTurnstileToken(token: string, remoteIp?: string | nu
     process.env.NODE_ENV !== "production";
 
   if (bypassAllowed && token === "dev-bypass") {
-    return { ok: true as const };
+    return { ok: true };
   }
 
   if (!token || token === "dev-bypass") {
-    return { ok: false as const };
+    return { ok: false, reason: "missing" };
   }
 
   const body = new URLSearchParams({
-    secret: env.TURNSTILE_SECRET_KEY,
+    secret: env.TURNSTILE_SECRET_KEY.trim(),
     response: token,
   });
-
-  if (remoteIp) {
-    body.set("remoteip", remoteIp);
-  }
 
   try {
     const response = await fetch(
@@ -42,18 +42,19 @@ export async function verifyTurnstileToken(token: string, remoteIp?: string | nu
     );
 
     if (!response.ok) {
-      console.error("Turnstile verification request failed.");
-      return { ok: false as const };
+      console.error("[waitlist] turnstile_unavailable");
+      return { ok: false, reason: "unavailable" };
     }
 
     const payload = (await response.json()) as TurnstileApiResponse;
     if (!payload.success) {
-      return { ok: false as const };
+      console.error("[waitlist] turnstile_rejected");
+      return { ok: false, reason: "rejected" };
     }
 
-    return { ok: true as const };
+    return { ok: true };
   } catch {
-    console.error("Turnstile verification could not be completed.");
-    return { ok: false as const };
+    console.error("[waitlist] turnstile_unavailable");
+    return { ok: false, reason: "unavailable" };
   }
 }

@@ -95,7 +95,7 @@ Limits:
 - 5 attempts per 10 minutes per hashed IP
 - 3 attempts per hour per hashed email
 
-IPs are HMAC-SHA256 hashed with `RATE_LIMIT_HASH_SECRET`. Raw IPs are not stored.
+IPs are HMAC-SHA256 hashed with `RATE_LIMIT_HASH_SECRET` when that variable is set. If it is missing, the server derives a fallback from the service-role key so signups are not blocked. Set a dedicated secret in production when you can. Raw IPs are not stored.
 
 **Hosting assumption:** `x-forwarded-for` is trusted only when Vercel sets `VERCEL=1`. Outside Vercel, forwarded IPs are treated as untrusted.
 
@@ -129,9 +129,9 @@ In the Vercel project → Settings → Environment Variables, set the same keys 
 
 Production notes:
 
-- `NEXT_PUBLIC_SITE_URL` must be the public HTTPS origin, e.g. `https://waitlist.animivo.app`
+- `NEXT_PUBLIC_SITE_URL` should be the public HTTPS origin, e.g. `https://waitlist.animivo.app`. If it is missing, same-host Origin/`Host` (and Vercel URL) are still accepted so the form is not blocked on `*.vercel.app`.
 - `ALLOW_DEV_TURNSTILE_BYPASS=false`
-- `NEXT_PUBLIC_TURNSTILE_SITE_KEY` and `TURNSTILE_SECRET_KEY` are required for the form to work
+- `NEXT_PUBLIC_TURNSTILE_SITE_KEY` and `TURNSTILE_SECRET_KEY` are required for the form to work. Widget success is not enough — the secret must match that widget or server verification fails.
 - After adding `NEXT_PUBLIC_` variables, trigger a new deployment so the client can see the site key
 - `NEXT_PUBLIC_ENABLE_ANALYTICS=true` only if you later add Vercel Web Analytics and want its script domains allowed in CSP. The npm analytics package is not installed, so deploys stay Next.js-only.
 

@@ -44,4 +44,29 @@ describe("request origin validation", () => {
     const headers = new Headers({ origin: "https://waitlist.example.test" });
     expect(isAllowedRequestOrigin(headers)).toBe(true);
   });
+
+  it("allows Origin when it matches the request Host even if SITE_URL is unset", () => {
+    mocks.getServerEnv.mockReturnValue({
+      NODE_ENV: "production",
+      VERCEL_ENV: "production",
+    });
+    const headers = new Headers({
+      origin: "https://animivo-waitlist.vercel.app",
+      host: "animivo-waitlist.vercel.app",
+    });
+    expect(isAllowedRequestOrigin(headers)).toBe(true);
+  });
+
+  it("allows the Vercel host when SITE_URL is a different custom domain", () => {
+    mocks.getServerEnv.mockReturnValue({
+      NODE_ENV: "production",
+      VERCEL_ENV: "production",
+      NEXT_PUBLIC_SITE_URL: "https://waitlist.animivo.app",
+    });
+    const headers = new Headers({
+      origin: "https://animivo-waitlist.vercel.app",
+      "x-forwarded-host": "animivo-waitlist.vercel.app",
+    });
+    expect(isAllowedRequestOrigin(headers)).toBe(true);
+  });
 });
