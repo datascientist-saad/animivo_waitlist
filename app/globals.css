@@ -53,6 +53,10 @@
   --radius-brand: var(--brand-radius);
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 html,
 body {
   background: var(--brand-background);
@@ -73,13 +77,156 @@ body {
   outline-offset: 3px;
 }
 
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes gentle-scale {
+  from {
+    opacity: 0;
+    transform: scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes paw-soft {
+  0%,
+  100% {
+    transform: rotate(-8deg) translateY(0);
+  }
+  50% {
+    transform: rotate(8deg) translateY(-1px);
+  }
+}
+
+@keyframes blob-drift {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(6px, -8px);
+  }
+}
+
+@keyframes chip-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.anim-fade-up {
+  animation: fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.anim-scale-in {
+  animation: gentle-scale 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.anim-delay-1 {
+  animation-delay: 80ms;
+}
+
+.anim-delay-2 {
+  animation-delay: 160ms;
+}
+
+.anim-delay-3 {
+  animation-delay: 240ms;
+}
+
+.anim-delay-4 {
+  animation-delay: 320ms;
+}
+
+.anim-paw {
+  animation: paw-soft 3.6s ease-in-out infinite;
+  transform-origin: 50% 70%;
+}
+
+.anim-blob {
+  animation: blob-drift 12s ease-in-out infinite;
+}
+
+.anim-chip {
+  animation: chip-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.lift-card {
+  transition:
+    transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.lift-card:hover {
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--brand-primary) 28%, var(--brand-border));
+  box-shadow: 0 10px 28px rgb(44 42 38 / 0.08);
+}
+
+.field-ease {
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.field-ease:hover {
+  border-color: color-mix(in srgb, var(--brand-primary) 35%, var(--brand-border));
+}
+
+.field-ease:focus {
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 4px rgb(107 143 113 / 0.18);
+}
+
+.btn-ease {
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.2s ease;
+}
+
+.btn-ease:hover {
+  transform: translateY(-1px);
+}
+
+.btn-ease:active {
+  transform: translateY(0);
+}
+
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
   *,
   *::before,
   *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+    animation: none !important;
+    transition: none !important;
     scroll-behavior: auto !important;
+  }
+
+  .lift-card:hover,
+  .btn-ease:hover,
+  .btn-ease:active {
+    transform: none;
   }
 }

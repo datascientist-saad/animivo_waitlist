@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
-import { LoaderCircle } from "lucide-react";
+import { LoaderCircle, PawPrint } from "lucide-react";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { captureClientAttribution } from "@/lib/attribution";
@@ -133,10 +133,11 @@ export function WaitlistForm() {
 
     return (
       <div
-        className="rounded-[1.5rem] border border-border bg-card p-5 shadow-soft md:p-6"
+        className="anim-scale-in rounded-[1.5rem] border border-border bg-card p-5 shadow-soft md:p-6"
         role="status"
         aria-live="polite"
       >
+        <PawPrint className="anim-paw mb-3 size-6 text-primary" aria-hidden="true" />
         <p className="font-display text-2xl font-semibold tracking-tight">{title}</p>
         {body ? (
           <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{body}</p>
@@ -146,13 +147,13 @@ export function WaitlistForm() {
   }
 
   const fieldClass =
-    "min-h-11 w-full rounded-2xl border border-border bg-background px-3.5 text-base text-foreground shadow-sm placeholder:text-muted-foreground/80 disabled:opacity-60";
+    "field-ease min-h-11 w-full rounded-2xl border border-border bg-background px-3.5 text-base text-foreground shadow-sm placeholder:text-muted-foreground/80 disabled:opacity-60";
 
   return (
     <form
       id="join"
       onSubmit={handleSubmit(onSubmit)}
-      className="rounded-[1.5rem] border border-border bg-card p-5 shadow-soft md:p-6"
+      className="relative rounded-[1.5rem] border border-border bg-card p-5 shadow-soft md:p-6"
       noValidate
     >
       <div className="space-y-4">
@@ -251,7 +252,7 @@ export function WaitlistForm() {
           <textarea
             id="biggestChallenge"
             rows={3}
-            className="w-full rounded-2xl border border-border bg-background px-3.5 py-3 text-base text-foreground shadow-sm placeholder:text-muted-foreground/80 disabled:opacity-60"
+            className="field-ease w-full rounded-2xl border border-border bg-background px-3.5 py-3 text-base text-foreground shadow-sm placeholder:text-muted-foreground/80 disabled:opacity-60"
             aria-invalid={Boolean(errors.biggestChallenge)}
             aria-describedby={
               errors.biggestChallenge ? "biggestChallenge-error" : "biggestChallenge-hint"
@@ -331,7 +332,7 @@ export function WaitlistForm() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-primary px-8 text-sm font-medium text-primary-foreground shadow-soft transition-colors hover:bg-[var(--brand-primary-hover)] disabled:opacity-70"
+          className="btn-ease inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-full bg-primary px-8 text-sm font-medium text-primary-foreground shadow-soft hover:bg-[var(--brand-primary-hover)] disabled:opacity-70"
         >
           {isSubmitting ? (
             <>
@@ -343,6 +344,9 @@ export function WaitlistForm() {
           )}
         </button>
         <p className="text-sm text-muted-foreground">{COPY.privacyReassurance}</p>
+        <p className="text-xs text-muted-foreground">
+          About a minute. Pet’s name and the challenge question are optional.
+        </p>
       </div>
     </form>
   );

@@ -14,19 +14,19 @@ export function SiteFooter() {
           <nav className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
             <Link
               href="/privacy"
-              className="inline-flex min-h-11 items-center hover:text-foreground"
+              className="inline-flex min-h-11 items-center transition-colors duration-200 hover:text-foreground"
             >
               Privacy Policy
             </Link>
             <Link
               href="/terms"
-              className="inline-flex min-h-11 items-center hover:text-foreground"
+              className="inline-flex min-h-11 items-center transition-colors duration-200 hover:text-foreground"
             >
               Terms
             </Link>
             <a
               href={`mailto:${email}`}
-              className="inline-flex min-h-11 items-center hover:text-foreground"
+              className="inline-flex min-h-11 items-center transition-colors duration-200 hover:text-foreground"
             >
               {email}
             </a>

@@ -13,7 +13,7 @@ export function FoundingBenefits() {
       className="mx-auto max-w-6xl px-4 py-16 md:px-8 md:py-20"
     >
       <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
-        <div>
+        <div className="anim-fade-up">
           <h2
             id="founding-heading"
             className="font-display text-3xl font-semibold tracking-tight md:text-4xl"
@@ -26,7 +26,7 @@ export function FoundingBenefits() {
             next.
           </p>
         </div>
-        <ul className="space-y-3 rounded-[2rem] border border-border bg-card p-6 shadow-soft">
+        <ul className="anim-scale-in anim-delay-2 space-y-3 rounded-[2rem] border border-border bg-card p-6 shadow-soft">
           {perks.map((perk) => (
             <li key={perk} className="flex items-start gap-3 text-sm">
               <span className="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">

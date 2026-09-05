@@ -28,15 +28,17 @@ export function ValueSection() {
       <div className="mx-auto max-w-6xl">
         <h2
           id="value-heading"
-          className="font-display text-3xl font-semibold tracking-tight md:text-4xl"
+          className="anim-fade-up font-display text-3xl font-semibold tracking-tight md:text-4xl"
         >
           Less guessing. More good days together.
         </h2>
         <div className="mt-10 grid gap-5 md:grid-cols-3">
-          {benefits.map((benefit) => (
+          {benefits.map((benefit, index) => (
             <article
               key={benefit.title}
-              className="rounded-2xl border border-border bg-card p-6 shadow-soft"
+              className={`lift-card anim-fade-up rounded-2xl border border-border bg-card p-6 shadow-soft ${
+                index === 0 ? "anim-delay-1" : index === 1 ? "anim-delay-2" : "anim-delay-3"
+              }`}
             >
               <div className="mb-4 flex size-11 items-center justify-center rounded-2xl bg-secondary text-primary">
                 <benefit.icon className="size-5" aria-hidden="true" />

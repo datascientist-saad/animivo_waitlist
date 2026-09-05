@@ -34,11 +34,11 @@ export function BrandMark({
 
 export function SiteHeader() {
   return (
-    <header className="mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-5 md:px-8">
+    <header className="anim-fade-up mx-auto flex w-full max-w-6xl items-center justify-between px-4 py-5 md:px-8">
       <BrandMark />
       <a
         href="#join"
-        className="inline-flex min-h-11 items-center justify-center rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-soft transition-colors hover:bg-[var(--brand-primary-hover)]"
+        className="btn-ease inline-flex min-h-11 items-center justify-center rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-soft hover:bg-[var(--brand-primary-hover)]"
       >
         Join the first 100
       </a>
