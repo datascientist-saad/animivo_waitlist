@@ -1,3 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Animivo AI">
-  <image href="icon-512.png" width="512" height="512"/>
+  <rect width="512" height="512" rx="108" fill="#141414"/>
+  <rect x="171" width="170" height="512" fill="#F4F0E8"/>
+  <path fill="#6B8F71" d="M206 268c0-44 22-78 50-78s50 34 50 78v36H206z"/>
+  <g fill="#1A1816">
+    <ellipse cx="228" cy="286" rx="9" ry="12"/>
+    <path d="M248 304c8-28 22-42 38-38 10 2 16 14 14 28-8 22-28 32-46 28z"/>
+    <ellipse cx="268" cy="248" rx="6" ry="5"/>
+    <path d="M292 300c6-16 18-22 26-12 4 6 2 18-6 24-10 8-20 6-20-12z"/>
+  </g>
 </svg>

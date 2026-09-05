@@ -74,6 +74,47 @@ function pngToIco(png32, png16) {
   return Buffer.concat(chunks);
 }
 
+async function stripeMarkPng(size) {
+  const channels = 4;
+  const data = Buffer.alloc(size * size * channels);
+  const stripeStart = Math.floor(size / 3);
+  const stripeEnd = Math.ceil((size * 2) / 3);
+  const archCx = size / 2;
+  const archCy = size * 0.55;
+  const archR = Math.max(2, size * 0.18);
+
+  for (let y = 0; y < size; y++) {
+    for (let x = 0; x < size; x++) {
+      const i = (y * size + x) * channels;
+      let r = 20;
+      let g = 20;
+      let b = 20;
+      if (x >= stripeStart && x < stripeEnd) {
+        r = 244;
+        g = 240;
+        b = 232;
+      }
+
+      const ax = x + 0.5 - archCx;
+      const ay = y + 0.5 - archCy;
+      if (ay <= 1 && ax * ax + (ay + archR * 0.35) * (ay + archR * 0.35) <= archR * archR) {
+        r = 107;
+        g = 143;
+        b = 113;
+      }
+
+      data[i] = r;
+      data[i + 1] = g;
+      data[i + 2] = b;
+      data[i + 3] = 255;
+    }
+  }
+
+  return sharp(data, { raw: { width: size, height: size, channels } })
+    .png()
+    .toBuffer();
+}
+
 async function squareIcon(size, dest) {
   await sharp(APP_ICON)
     .resize(size, size, { fit: "cover", kernel: "lanczos3" })
@@ -94,11 +135,10 @@ async function main() {
   await squareIcon(180, path.join(ROOT, "public/icons/apple-touch-icon.png"));
   await squareIcon(192, path.join(ROOT, "public/icons/icon-192.png"));
   await squareIcon(512, path.join(ROOT, "public/icons/icon-512.png"));
+  copyFileSync(APP_ICON, path.join(ROOT, "public/brand/animivo-app-icon.png"));
+
   const png32 = await sharp(path.join(ROOT, "public/icons/icon-32.png")).png().toBuffer();
-  const png16 = await sharp(path.join(ROOT, "public/icons/icon-32.png"))
-    .resize(16, 16)
-    .png()
-    .toBuffer();
+  const png16 = await stripeMarkPng(16);
   writeFileSync(path.join(ROOT, "public/favicon.ico"), pngToIco(png32, png16));
 
   const logoFull = await sharp(fullLockupPath)
@@ -139,14 +179,6 @@ async function main() {
     ])
     .png({ compressionLevel: 9 })
     .toFile(path.join(ROOT, "public/brand/og-image.png"));
-
-  writeFileSync(
-    path.join(ROOT, "public/icons/icon.svg"),
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Animivo AI">
-  <image href="icon-512.png" width="512" height="512"/>
-</svg>
-`,
-  );
 
   copyFileSync(path.join(ROOT, "public/icons/icon-512.png"), path.join(ROOT, "app/icon.png"));
   copyFileSync(
