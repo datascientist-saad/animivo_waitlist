@@ -4,11 +4,11 @@ import sharp from "sharp";
 
 const ROOT = path.resolve(".");
 const SRC = path.join(ROOT, "brand/animivo-logo-master.png");
+const APP_ICON = path.join(ROOT, "brand/animivo-app-icon.png");
 const CREAM = { r: 250, g: 247, b: 242, alpha: 1 };
 
 const LOCKUP = { left: 154, top: 491, width: 1694, height: 890 };
 const FULL = { left: 154, top: 491, width: 1694, height: 1009 };
-const ARCH = { left: 368, top: 492, width: 1306, height: 625 };
 
 async function toTransparentPng(extract, padding, dest, maxWidth) {
   const padded = {
@@ -75,21 +75,8 @@ function pngToIco(png32, png16) {
 }
 
 async function squareIcon(size, dest) {
-  const extraY = ARCH.width - ARCH.height;
-  const top = Math.floor(extraY / 2);
-  const bottom = extraY - top;
-  const pad = Math.round(ARCH.width * 0.08);
-
-  await sharp(SRC)
-    .extract(ARCH)
-    .extend({
-      top: top + pad,
-      bottom: bottom + pad,
-      left: pad,
-      right: pad,
-      background: CREAM,
-    })
-    .resize(size, size, { fit: "fill", kernel: "lanczos3" })
+  await sharp(APP_ICON)
+    .resize(size, size, { fit: "cover", kernel: "lanczos3" })
     .png({ compressionLevel: 9 })
     .toFile(dest);
 }
