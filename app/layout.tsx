@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Plus_Jakarta_Sans } from "next/font/google";
-import { Analytics } from "@vercel/analytics/react";
 import { COPY, getPublicSiteUrl, SITE_NAME } from "@/lib/site-config";
 import "./globals.css";
 
@@ -63,8 +62,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const enableAnalytics = process.env.NEXT_PUBLIC_ENABLE_ANALYTICS === "true";
-
   return (
     <html lang="en">
       <body
@@ -77,7 +74,6 @@ export default function RootLayout({
           Skip to main content
         </a>
         {children}
-        {enableAnalytics ? <Analytics /> : null}
       </body>
     </html>
   );

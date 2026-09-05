@@ -122,7 +122,7 @@ Production notes:
 
 - `NEXT_PUBLIC_SITE_URL` must be the public HTTPS origin, e.g. `https://waitlist.animivo.app`
 - `ALLOW_DEV_TURNSTILE_BYPASS=false`
-- `NEXT_PUBLIC_ENABLE_ANALYTICS=true` only if you want Vercel Web Analytics
+- `NEXT_PUBLIC_ENABLE_ANALYTICS=true` only if you later add Vercel Web Analytics and want its script domains allowed in CSP. The npm analytics package is not installed, so deploys stay Next.js-only.
 
 ## 9. Run tests
 
