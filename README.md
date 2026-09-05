@@ -56,11 +56,20 @@ Confirm:
 
 ## 5. Create Cloudflare Turnstile keys
 
-1. Open [https://dash.cloudflare.com/](https://dash.cloudflare.com/) → Turnstile
-2. Add a site (widget type: managed)
-3. Add your local origin (`http://127.0.0.1:43123`) and your production domain
-4. Copy the site key to `NEXT_PUBLIC_TURNSTILE_SITE_KEY`
-5. Copy the secret key to `TURNSTILE_SECRET_KEY`
+The live form will not accept signups until both Turnstile keys are set. Without the site key, the widget never appears.
+
+1. Open [Cloudflare Turnstile](https://dash.cloudflare.com/?to=/:account/turnstile)
+2. Create a widget (type: **Managed**)
+3. Add hostnames:
+   - your Vercel domain, e.g. `animivo-waitlist.vercel.app`
+   - any custom domain
+   - `localhost` for local testing
+4. Copy **Site Key** → `NEXT_PUBLIC_TURNSTILE_SITE_KEY`
+5. Copy **Secret Key** → `TURNSTILE_SECRET_KEY`
+6. In Vercel → Settings → Environment Variables, add both for **Production** (and Preview)
+7. **Redeploy** the project. Public `NEXT_PUBLIC_` values must exist for the build/runtime that serves the page.
+
+Do not use Cloudflare’s always-pass test keys in production.
 
 Local-only bypass (never used in production):
 
@@ -122,6 +131,8 @@ Production notes:
 
 - `NEXT_PUBLIC_SITE_URL` must be the public HTTPS origin, e.g. `https://waitlist.animivo.app`
 - `ALLOW_DEV_TURNSTILE_BYPASS=false`
+- `NEXT_PUBLIC_TURNSTILE_SITE_KEY` and `TURNSTILE_SECRET_KEY` are required for the form to work
+- After adding `NEXT_PUBLIC_` variables, trigger a new deployment so the client can see the site key
 - `NEXT_PUBLIC_ENABLE_ANALYTICS=true` only if you later add Vercel Web Analytics and want its script domains allowed in CSP. The npm analytics package is not installed, so deploys stay Next.js-only.
 
 ## 9. Run tests

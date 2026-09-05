@@ -28,13 +28,19 @@ type FormValues = {
 
 type SubmitOutcome = "joined" | "already_joined";
 
-export function WaitlistForm() {
+export function WaitlistForm({
+  turnstileSiteKey,
+  contactEmail,
+}: {
+  turnstileSiteKey: string;
+  contactEmail: string;
+}) {
   const turnstileRef = useRef<TurnstileInstance | null>(null);
   const honeypotRef = useRef<HTMLInputElement | null>(null);
   const [token, setToken] = useState("");
   const [serverError, setServerError] = useState<string | null>(null);
   const [outcome, setOutcome] = useState<SubmitOutcome | null>(null);
-  const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? "";
+  const siteKey = turnstileSiteKey;
   const allowClientDevToken =
     process.env.NODE_ENV !== "production" && siteKey.length === 0;
 
@@ -58,7 +64,11 @@ export function WaitlistForm() {
     setServerError(null);
     const turnstileToken = allowClientDevToken ? "dev-bypass" : token;
     if (!turnstileToken) {
-      setServerError("Please complete the verification check.");
+      setServerError(
+        siteKey
+          ? "Please complete the verification check."
+          : "Signups are paused until bot protection is connected.",
+      );
       return;
     }
 
@@ -323,9 +333,10 @@ export function WaitlistForm() {
             />
           </div>
         ) : (
-          <p className="text-xs text-muted-foreground">
-            Bot protection is configured on the server. Local development can use a
-            documented bypass only when explicitly enabled.
+          <p className="rounded-2xl bg-secondary px-3 py-2 text-sm text-secondary-foreground">
+            {process.env.NODE_ENV === "production"
+              ? `The Cloudflare Turnstile widget is not configured yet, so this live form cannot accept signups. Add the Turnstile site and secret keys in Vercel, redeploy, then try again. Questions: ${contactEmail}.`
+              : "Turnstile is not configured. Local development can use ALLOW_DEV_TURNSTILE_BYPASS=true with the token documented in the README."}
           </p>
         )}
 
@@ -339,7 +350,7 @@ export function WaitlistForm() {
 
         <button
           type="submit"
-          disabled={isSubmitting}
+          disabled={isSubmitting || (!siteKey && !allowClientDevToken)}
           className="btn-ease inline-flex h-[50px] min-h-12 w-full items-center justify-center gap-2 rounded-[12px] bg-primary px-6 text-[0.95rem] font-medium text-primary-foreground shadow-[0_8px_18px_rgb(107_143_113_/_0.28)] hover:bg-[var(--brand-primary-hover)] disabled:opacity-70"
         >
           {isSubmitting ? (

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { HeartPulse, Salad, ShieldCheck, Sparkles } from "lucide-react";
 import { WaitlistForm } from "@/components/waitlist-form";
-import { COPY, HERO_BLUR_DATA_URL } from "@/lib/site-config";
+import { COPY, HERO_BLUR_DATA_URL, getContactEmail } from "@/lib/site-config";
 
 export function HeroSection() {
   return (
@@ -25,7 +25,10 @@ export function HeroSection() {
           </p>
         </div>
         <div className="anim-fade-up anim-delay-2 mt-8" id="join">
-          <WaitlistForm />
+          <WaitlistForm
+            turnstileSiteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim() ?? ""}
+            contactEmail={getContactEmail()}
+          />
         </div>
         <p className="anim-fade-up anim-delay-3 mt-3 flex items-center gap-1.5 text-[0.76rem] text-muted-foreground">
           <ShieldCheck className="size-3.5 shrink-0" aria-hidden="true" />
