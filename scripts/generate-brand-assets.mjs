@@ -4,11 +4,10 @@ import sharp from "sharp";
 
 const ROOT = path.resolve(".");
 const SRC = path.join(ROOT, "brand/animivo-logo-master.png");
-const APP_ICON = path.join(ROOT, "brand/animivo-app-icon.png");
 const CREAM = { r: 250, g: 247, b: 242, alpha: 1 };
 
-const LOCKUP = { left: 154, top: 491, width: 1694, height: 890 };
 const FULL = { left: 154, top: 491, width: 1694, height: 1009 };
+const ARCH = { left: 368, top: 492, width: 1306, height: 625 };
 
 async function toTransparentPng(extract, padding, dest, maxWidth) {
   const padded = {
@@ -18,7 +17,7 @@ async function toTransparentPng(extract, padding, dest, maxWidth) {
     height: extract.height + padding * 2,
   };
 
-  const { data, info } = await sharp(SRC)
+  const { data, info } = await sharp(SRC, { autoOrient: false })
     .extract(padded)
     .ensureAlpha()
     .raw()
@@ -74,50 +73,29 @@ function pngToIco(png32, png16) {
   return Buffer.concat(chunks);
 }
 
-async function stripeMarkPng(size) {
-  const channels = 4;
-  const data = Buffer.alloc(size * size * channels);
-  const stripeStart = Math.floor(size / 3);
-  const stripeEnd = Math.ceil((size * 2) / 3);
-  const archCx = size / 2;
-  const archCy = size * 0.55;
-  const archR = Math.max(2, size * 0.18);
-
-  for (let y = 0; y < size; y++) {
-    for (let x = 0; x < size; x++) {
-      const i = (y * size + x) * channels;
-      let r = 20;
-      let g = 20;
-      let b = 20;
-      if (x >= stripeStart && x < stripeEnd) {
-        r = 244;
-        g = 240;
-        b = 232;
-      }
-
-      const ax = x + 0.5 - archCx;
-      const ay = y + 0.5 - archCy;
-      if (ay <= 1 && ax * ax + (ay + archR * 0.35) * (ay + archR * 0.35) <= archR * archR) {
-        r = 107;
-        g = 143;
-        b = 113;
-      }
-
-      data[i] = r;
-      data[i + 1] = g;
-      data[i + 2] = b;
-      data[i + 3] = 255;
-    }
-  }
-
-  return sharp(data, { raw: { width: size, height: size, channels } })
-    .png()
-    .toBuffer();
-}
-
 async function squareIcon(size, dest) {
-  await sharp(APP_ICON)
-    .resize(size, size, { fit: "cover", kernel: "lanczos3" })
+  const arch = await sharp(SRC, { autoOrient: false }).extract(ARCH).png().toBuffer();
+  await sharp({
+    create: {
+      width: size,
+      height: size,
+      channels: 3,
+      background: { r: 250, g: 247, b: 242 },
+    },
+  })
+    .composite([
+      {
+        input: await sharp(arch, { autoOrient: false })
+          .resize({
+            width: Math.round(size * 0.86),
+            height: Math.round(size * 0.86),
+            fit: "inside",
+          })
+          .png()
+          .toBuffer(),
+        gravity: "center",
+      },
+    ])
     .png({ compressionLevel: 9 })
     .toFile(dest);
 }
@@ -126,8 +104,7 @@ async function main() {
   mkdirSync(path.join(ROOT, "public/brand"), { recursive: true });
   mkdirSync(path.join(ROOT, "public/icons"), { recursive: true });
 
-  const fullLockupPath = path.join(ROOT, "brand/animivo-logo-full.png");
-  await toTransparentPng(LOCKUP, 24, path.join(ROOT, "public/brand/animivo-logo.png"), 1400);
+  const fullLockupPath = path.join(ROOT, "public/brand/animivo-logo.png");
   await toTransparentPng(FULL, 24, fullLockupPath, 1400);
 
   await squareIcon(32, path.join(ROOT, "public/icons/icon-32.png"));
@@ -135,10 +112,12 @@ async function main() {
   await squareIcon(180, path.join(ROOT, "public/icons/apple-touch-icon.png"));
   await squareIcon(192, path.join(ROOT, "public/icons/icon-192.png"));
   await squareIcon(512, path.join(ROOT, "public/icons/icon-512.png"));
-  copyFileSync(APP_ICON, path.join(ROOT, "public/brand/animivo-app-icon.png"));
 
   const png32 = await sharp(path.join(ROOT, "public/icons/icon-32.png")).png().toBuffer();
-  const png16 = await stripeMarkPng(16);
+  const png16 = await sharp(path.join(ROOT, "public/icons/icon-32.png"))
+    .resize(16, 16)
+    .png()
+    .toBuffer();
   writeFileSync(path.join(ROOT, "public/favicon.ico"), pngToIco(png32, png16));
 
   const logoFull = await sharp(fullLockupPath)

@@ -9,32 +9,30 @@ export function BrandMark({
   href?: string;
   size?: "sm" | "md";
 }) {
-  const icon = size === "sm" ? 36 : 44;
-  const text = size === "sm" ? "text-lg" : "text-[1.35rem]";
+  const height = size === "sm" ? 56 : 72;
+  const width = Math.round((1400 / 849) * height);
 
   return (
     <Link
       href={href}
-      className="inline-flex items-center gap-2.5 transition-opacity hover:opacity-80"
+      className="inline-flex items-center transition-opacity hover:opacity-80"
+      aria-label={SITE_NAME}
     >
       <Image
-        src="/brand/animivo-app-icon.png"
-        alt=""
-        width={icon}
-        height={icon}
-        className="rounded-[10px] shadow-soft"
+        src="/brand/animivo-logo.png"
+        alt={SITE_NAME}
+        width={width}
+        height={height}
+        className={size === "sm" ? "h-14 w-auto" : "h-16 w-auto md:h-[4.5rem]"}
         priority={size === "md"}
       />
-      <span className={`font-display ${text} font-medium tracking-tight text-foreground`}>
-        {SITE_NAME}
-      </span>
     </Link>
   );
 }
 
 export function SiteHeader() {
   return (
-    <header className="anim-fade-up mx-auto flex h-[72px] w-full max-w-[1240px] items-center justify-between gap-4 px-5 md:h-[82px] md:px-8">
+    <header className="anim-fade-up mx-auto flex h-[88px] w-full max-w-[1240px] items-center justify-between gap-4 px-5 md:h-[96px] md:px-8">
       <BrandMark />
       <Link
         href="/#join"
