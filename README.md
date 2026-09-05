@@ -125,14 +125,24 @@ openssl rand -hex 32
 
 ## 8. Vercel environment variables
 
-In the Vercel project → Settings → Environment Variables, set the same keys for Production (and Preview if you want preview signups).
+In the Vercel project → Settings → Environment Variables, set these for **Production** (and Preview if you want preview signups), then **redeploy**.
+
+Required at runtime (a 503 from `/api/waitlist` with “isn’t fully configured yet” means one of these is missing):
+
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `TURNSTILE_SECRET_KEY`
+- `NEXT_PUBLIC_TURNSTILE_SITE_KEY` (needed so the widget renders; already inlined if set at build time)
+
+Recommended:
+
+- `NEXT_PUBLIC_SITE_URL` — public HTTPS origin. A host without `https://` is accepted. Invalid values are ignored instead of taking the API down.
+- `RATE_LIMIT_HASH_SECRET` — `openssl rand -hex 32`. Short or empty values fall back to a derived secret.
 
 Production notes:
 
-- `NEXT_PUBLIC_SITE_URL` should be the public HTTPS origin, e.g. `https://waitlist.animivo.app`. If it is missing, same-host Origin/`Host` (and Vercel URL) are still accepted so the form is not blocked on `*.vercel.app`.
-- `ALLOW_DEV_TURNSTILE_BYPASS=false`
-- `NEXT_PUBLIC_TURNSTILE_SITE_KEY` and `TURNSTILE_SECRET_KEY` are required for the form to work. Widget success is not enough — the secret must match that widget or server verification fails.
-- After adding `NEXT_PUBLIC_` variables, trigger a new deployment so the client can see the site key
+- `ALLOW_DEV_TURNSTILE_BYPASS` should be `false` or unset. Empty/invalid optional flags no longer block signups.
+- After adding `NEXT_PUBLIC_` variables, trigger a new deployment so the client can see the site key.
 - `NEXT_PUBLIC_ENABLE_ANALYTICS=true` only if you later add Vercel Web Analytics and want its script domains allowed in CSP. The npm analytics package is not installed, so deploys stay Next.js-only.
 
 ## 9. Run tests
