@@ -38,7 +38,7 @@ export function SiteFooter() {
         <p className="max-w-3xl text-sm leading-relaxed text-muted-foreground">
           {COPY.veterinaryDisclaimer}
         </p>
-        <p className="text-sm text-muted-foreground">© {year} Animivo</p>
+        <p className="text-sm text-muted-foreground">© {year} Animivo AI</p>
       </div>
     </footer>
   );

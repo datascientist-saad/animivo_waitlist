@@ -1,4 +1,4 @@
-export const SITE_NAME = "Animivo";
+export const SITE_NAME = "Animivo AI";
 
 export const DEFAULT_CONTACT_EMAIL = "hello@animivo.app";
 
@@ -20,7 +20,7 @@ export function getPublicSiteUrl() {
 }
 
 export const COPY = {
-  title: "Animivo Early Access | Better Pet Care, Made Clear",
+  title: "Animivo AI Early Access | Better Pet Care, Made Clear",
   description:
     "Join the first 100 pet parents shaping Animivo—one calm place for feeding guidance, health routines, vaccination reminders, and everyday pet care.",
   eyebrow: "EARLY ACCESS FOR THOUGHTFUL PET PARENTS",

@@ -8,7 +8,7 @@ export default function NotFound() {
         <BrandMark />
       </header>
       <main className="mx-auto flex w-full max-w-lg flex-1 flex-col justify-center px-4 pb-16 text-center">
-        <p className="text-sm font-medium text-primary">Animivo</p>
+        <p className="text-sm font-medium text-primary">Animivo AI</p>
         <h1 className="mt-3 font-display text-3xl font-semibold">Page not found</h1>
         <p className="mt-3 text-muted-foreground">
           That link doesn’t lead anywhere. Head back to the waitlist to join the Founding 100.

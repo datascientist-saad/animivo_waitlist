@@ -5,44 +5,38 @@ import { SITE_NAME } from "@/lib/site-config";
 export function BrandMark({
   href = "/",
   size = "md",
-  inverted = false,
 }: {
   href?: string;
   size?: "sm" | "md";
-  inverted?: boolean;
 }) {
-  const icon = size === "sm" ? 32 : 36;
-  const text = size === "sm" ? "text-lg" : "text-[1.35rem]";
+  const height = size === "sm" ? 48 : 64;
+  const width = Math.round((1400 / 754) * height);
 
   return (
     <Link
       href={href}
-      className={`inline-flex items-center gap-2.5 transition-opacity hover:opacity-80 ${
-        inverted ? "text-ink-foreground" : "text-foreground"
-      }`}
+      className="inline-flex items-center transition-opacity hover:opacity-80"
+      aria-label={SITE_NAME}
     >
       <Image
-        src="/icons/icon.svg"
-        alt=""
-        width={icon}
-        height={icon}
-        className="rounded-[12px_12px_12px_4px]"
-        unoptimized
+        src="/brand/animivo-logo.png"
+        alt={SITE_NAME}
+        width={width}
+        height={height}
+        className={size === "sm" ? "h-12 w-auto" : "h-14 w-auto md:h-16"}
+        priority={size === "md"}
       />
-      <span className={`font-display ${text} font-medium tracking-tight`}>
-        {SITE_NAME}
-      </span>
     </Link>
   );
 }
 
 export function SiteHeader() {
   return (
-    <header className="anim-fade-up mx-auto flex h-[72px] w-full max-w-[1240px] items-center justify-between px-5 md:h-[82px] md:px-8">
+    <header className="anim-fade-up mx-auto flex h-[84px] w-full max-w-[1240px] items-center justify-between gap-4 px-5 md:h-[92px] md:px-8">
       <BrandMark />
       <Link
         href="/#join"
-        className="inline-flex min-h-11 items-center text-[0.92rem] font-semibold text-primary underline decoration-primary/40 underline-offset-[5px] transition-colors hover:decoration-primary"
+        className="inline-flex min-h-11 shrink-0 items-center text-[0.92rem] font-semibold text-primary underline decoration-primary/40 underline-offset-[5px] transition-colors hover:decoration-primary"
       >
         Join the first 100
       </Link>
