@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Plus_Jakarta_Sans } from "next/font/google";
+import { headers } from "next/headers";
 import { COPY, getPublicSiteUrl, SITE_NAME } from "@/lib/site-config";
 import "./globals.css";
 
@@ -57,11 +58,17 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export const dynamic = "force-dynamic";
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Reading request headers opts the app into dynamic rendering so Next.js
+  // can attach the CSP nonce to its runtime scripts.
+  await headers();
+
   return (
     <html lang="en">
       <body

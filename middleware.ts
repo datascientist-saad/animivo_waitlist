@@ -1,16 +1,19 @@
 import { NextResponse, type NextRequest } from "next/server";
 
 function buildCsp(nonce: string) {
+  const isDev = process.env.NODE_ENV === "development";
   const analytics =
     process.env.NEXT_PUBLIC_ENABLE_ANALYTICS === "true"
       ? " https://va.vercel-scripts.com https://vitals.vercel-insights.com"
       : "";
 
+  // Do not use strict-dynamic: it ignores host allowlists and blocks Turnstile.
+  // Next.js applies this nonce to its own scripts on dynamically rendered pages.
   const scriptSrc = [
     "'self'",
     `'nonce-${nonce}'`,
-    "'strict-dynamic'",
     "https://challenges.cloudflare.com",
+    ...(isDev ? ["'unsafe-eval'"] : []),
   ].join(" ");
 
   return [
@@ -44,14 +47,14 @@ export function middleware(request: NextRequest) {
   });
 
   response.headers.set("Content-Security-Policy", csp);
-  response.headers.set("x-nonce", nonce);
   return response;
 }
 
 export const config = {
   matcher: [
     {
-      source: "/((?!_next/static|_next/image|favicon.ico|icons/|images/).*)",
+      source:
+        "/((?!api|_next/static|_next/image|favicon.ico|icons/|images/).*)",
       missing: [
         { type: "header", key: "next-router-prefetch" },
         { type: "header", key: "purpose", value: "prefetch" },

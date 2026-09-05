@@ -154,6 +154,8 @@ export function WaitlistForm() {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
+      method="post"
+      action="#join"
       className="relative max-w-[610px] rounded-[20px] border border-border bg-white/76 p-5 shadow-[0_14px_40px_rgb(107_143_113_/_0.08)] backdrop-blur-sm"
       noValidate
     >
