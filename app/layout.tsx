@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Fraunces, Plus_Jakarta_Sans } from "next/font/google";
 import { headers } from "next/headers";
+import { Analytics } from "@vercel/analytics/next";
 import { COPY, getPublicSiteUrl, SITE_NAME } from "@/lib/site-config";
 import "./globals.css";
 
@@ -81,6 +82,7 @@ export default async function RootLayout({
           Skip to main content
         </a>
         {children}
+        <Analytics />
       </body>
     </html>
   );
