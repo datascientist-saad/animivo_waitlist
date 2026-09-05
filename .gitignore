@@ -49,3 +49,7 @@ next-env.d.ts
 
 # generated lockup used only while building OG/favicon assets
 /brand/animivo-logo-full.png
+
+# supabase CLI local cache
+supabase/.temp
+supabase/.branches
