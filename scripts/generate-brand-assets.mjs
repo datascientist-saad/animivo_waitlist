@@ -1,4 +1,4 @@
-import { mkdirSync, writeFileSync } from "node:fs";
+import { copyFileSync, mkdirSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import sharp from "sharp";
 
@@ -160,6 +160,13 @@ async function main() {
 </svg>
 `,
   );
+
+  copyFileSync(path.join(ROOT, "public/icons/icon-512.png"), path.join(ROOT, "app/icon.png"));
+  copyFileSync(
+    path.join(ROOT, "public/icons/apple-touch-icon.png"),
+    path.join(ROOT, "app/apple-icon.png"),
+  );
+  copyFileSync(path.join(ROOT, "public/favicon.ico"), path.join(ROOT, "app/favicon.ico"));
 
   console.log("Brand assets written.");
 }

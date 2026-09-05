@@ -1,9 +1,15 @@
 export const SITE_NAME = "Animivo AI";
 
-export const DEFAULT_CONTACT_EMAIL = "hello@animivo.app";
+export const DEFAULT_CONTACT_EMAIL = "animivo.ai.for.pets@gmail.com";
+
+const LEGACY_CONTACT_EMAILS = new Set(["hello@animivo.app"]);
 
 export function getContactEmail() {
-  return process.env.ANIMIVO_CONTACT_EMAIL?.trim() || DEFAULT_CONTACT_EMAIL;
+  const value = process.env.ANIMIVO_CONTACT_EMAIL?.trim();
+  if (!value || LEGACY_CONTACT_EMAILS.has(value.toLowerCase())) {
+    return DEFAULT_CONTACT_EMAIL;
+  }
+  return value;
 }
 
 export function getPublicSiteUrl() {

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { DEFAULT_CONTACT_EMAIL } from "@/lib/site-config";
 
 export const PET_TYPES = [
   "dog",
@@ -94,7 +95,7 @@ export const GENERIC_ERROR =
   "We couldn’t save your signup just now. Please try again in a moment.";
 
 export const SETUP_ERROR =
-  "This waitlist isn’t fully configured yet. Please try again shortly, or email hello@animivo.app.";
+  `This waitlist isn’t fully configured yet. Please try again shortly, or email ${DEFAULT_CONTACT_EMAIL}.`;
 
 export const VERIFY_ERROR =
   "Please complete the verification check again, then resubmit.";
